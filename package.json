@@ -1,6 +1,6 @@
 {
   "name": "datastore-emulator-enforcer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "ISC",
   "author": "Antoine Beauvais-Lacasse <antoine.beaulac@gmail.com>",
   "description": "Simple tool to ensure google-cloud datastore targets an emulator, to avoid pollution of production data.",
@@ -37,8 +37,5 @@
     "chai": "^4.0.2",
     "mocha": "^3.4.2",
     "sinon": "^3.2.1"
-  },
-  "peerDependencies": {
-    "@google-cloud/datastore": "^1.0.0"
   }
 }
