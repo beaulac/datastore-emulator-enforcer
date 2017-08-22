@@ -1,17 +1,15 @@
 'use strict';
 const debug = require('debug')('datastore-emulator-enforcer')
     , execSync = require('child_process').execSync
-    , emulatorEnvVarKeys = require('./emulator.env.vars.json')
-    , dsModuleName = '@google-cloud/datastore';
+    , emulatorEnvVarKeys = require('./emulator.env.vars.json');
 
 
 exports.isEmulatorEnabled = ensureDsEmulatorIsEnabled();
 
 
 function ensureDsEmulatorIsEnabled() {
-    if (require.cache[require.resolve(dsModuleName)]) {
-        throw new Error('Datastore was loaded before checking for emulator!');
-
+    if (wasDatastoreAlreadyLoaded_()) {
+        throw Error('Datastore was loaded before checking for emulator!');
     } else if (isEmulatorEnabled_()) {
         debug('Datastore Emulator was already enabled');
         return true;
@@ -21,21 +19,27 @@ function ensureDsEmulatorIsEnabled() {
     }
 }
 
+function wasDatastoreAlreadyLoaded_() {
+    return require.cache[require.resolve('@google-cloud/datastore')];
+}
+
 function isEmulatorEnabled_() {
     return emulatorEnvVarKeys.every(k => process.env[k]);
 }
 
 function enableEmulator_() {
-    loadDsEmulatorConfig_().forEach(kv => {
-        const [key, value] = kv;
-        if (emulatorEnvVarKeys.includes(key) && value) {
-            process.env[key] = process.env[key] || value;
-        } else {
-            debug(`Unexpected env-var: ${key} = ${value}`);
-        }
-    });
+    loadDsEmulatorConfig_().forEach(setEmulatorEnvVar);
 
     return isEmulatorEnabled_() || failedToEnable_();
+}
+
+function setEmulatorEnvVar(kvTuple) {
+    const key = kvTuple[0], value = kvTuple[1];
+
+    if ((emulatorEnvVarKeys.indexOf(key) >= 0) && value) {
+        return process.env[key] = process.env[key] || value;
+    }
+    debug('Unexpected env-var: %s = %s', key, value);
 }
 
 /**
@@ -52,5 +56,5 @@ function loadDsEmulatorConfig_() {
 }
 
 function failedToEnable_() {
-    throw new Error('Could not enable datastore emulator!');
+    throw Error('Could not enable datastore emulator!');
 }
