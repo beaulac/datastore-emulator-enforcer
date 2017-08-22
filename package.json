@@ -1,10 +1,20 @@
 {
   "name": "datastore-emulator-enforcer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "ISC",
   "author": "Antoine Beauvais-Lacasse <antoine.beaulac@gmail.com>",
   "description": "Simple tool to ensure google-cloud datastore targets an emulator, to avoid pollution of production data.",
+  "keywords": [
+    "emulator",
+    "datastore",
+    "cloud datastore",
+    "google cloud datastore"
+  ],
   "main": "index.js",
+  "files": [
+    "index.js",
+    "emulator.env.vars.json"
+  ],
   "engines": {
     "node": ">=4.0.0"
   },
