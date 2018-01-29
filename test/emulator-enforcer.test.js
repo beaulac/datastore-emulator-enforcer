@@ -1,10 +1,21 @@
 'use strict';
-const chai = require('chai')
+const debug = require('debug')
+    , chai = require('chai')
     , expect = chai.expect
     , sinon = require('sinon')
     , randomString = () => Math.random().toString(36).slice(2)
     , emulatorEnvVarKeys = require('../emulator.env.vars.json');
 
+let oldEnv;
+before(() => {
+    debug.enable('datastore-emulator-enforcer');
+    oldEnv = process.env;
+    process.env = {};
+});
+after(() => {
+    debug.disable('datastore-emulator-enforcer');
+    return process.env = oldEnv;
+});
 
 describe('Datastore Emulator Enforcer', function () {
     const emulatorEnforcerPath = require.resolve('../');
@@ -16,17 +27,13 @@ describe('Datastore Emulator Enforcer', function () {
         return fixture;
     }
 
-    before(() => {
-        process.env = {DEBUG: 'datastore-emulator-enforcer'};
-    });
-
     beforeEach(() => {
         sandbox = sinon.sandbox.create();
     });
 
     afterEach(() => {
-        delete require.cache[emulatorEnforcerPath];
         emulatorEnvVarKeys.forEach(key => delete process.env[key]);
+        delete require.cache[emulatorEnforcerPath];
         delete require.cache[require.resolve('@google-cloud/datastore')];
         sandbox.restore();
     });
