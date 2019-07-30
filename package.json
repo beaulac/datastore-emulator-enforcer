@@ -30,10 +30,10 @@
   },
   "devDependencies": {
     "@google-cloud/datastore": "^1.3.3",
-    "@types/chai": "latest",
-    "@types/mocha": "latest",
-    "@types/node": "latest",
-    "@types/sinon": "latest",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.6.8",
+    "@types/sinon": "^7.0.13",
     "chai": "^4.1.2",
     "mocha": "^5.0.0",
     "sinon": "^4.2.2"
